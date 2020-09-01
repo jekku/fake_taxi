@@ -10,7 +10,9 @@ defmodule FakeTaxi do
       |> Jason.decode!()
       |> Enum.reverse()
       |> Enum.map(fn data ->
-        Map.put(data, "deliveryId", delivery_id)
+        data
+        |> Map.put("order_id", order_id)
+        |> Map.put("orderId", delivery_id)
       end)
 
     endpoint = "#{endpoint}/hooks/orkestro/#{order_id}"
