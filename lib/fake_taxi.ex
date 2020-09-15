@@ -3,7 +3,7 @@ defmodule FakeTaxi do
 
   @hook_templates "./lib/data.txt"
 
-  def start_link(%{order_id: order_id, endpoint: endpoint, delivery_id: delivery_id}) do
+  def start_link(%{order_id: order_id, endpoint: endpoint, delivery_id: delivery_id} = params) do
     hooks =
       @hook_templates
       |> File.read!()
@@ -13,12 +13,17 @@ defmodule FakeTaxi do
         data
         |> Map.put("order_id", order_id)
         |> Map.put("orderId", delivery_id)
+        |> Map.put("bookingReference", "#{Enum.random(1_000_000..1_999_999)}")
+        |> Map.put("vehicleType", get_vehicle_type(params))
       end)
 
     endpoint = "#{endpoint}/hooks/orkestro/#{order_id}"
 
     GenServer.start_link(FakeTaxi, %{hooks: hooks, endpoint: endpoint})
   end
+
+  defp get_vehicle_type(%{vehicle_type: vehicle_type}), do: vehicle_type
+  defp get_vehicle_type(_), do: "motorbike"
 
   def cancel(%{
         order_id: order_id,
