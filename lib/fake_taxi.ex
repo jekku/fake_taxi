@@ -15,6 +15,7 @@ defmodule FakeTaxi do
         |> Map.put("orderId", delivery_id)
         |> Map.put("bookingReference", "#{Enum.random(1_000_000..1_999_999)}")
         |> Map.put("vehicleType", get_vehicle_type(params))
+        |> Map.put("fleet", %{"name" => "Stuart"})
       end)
 
     endpoint = "#{endpoint}/hooks/orkestro/#{order_id}"
